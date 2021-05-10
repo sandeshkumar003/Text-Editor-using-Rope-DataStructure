@@ -11,7 +11,7 @@ class Rope(object):
         if isinstance(value,str):
             self.left = None
             self.right = None
-            self.data = value
+            self.value = value
             self.weight = len(value)
             self.parent = parent
             self.current = self
@@ -21,23 +21,23 @@ class Rope(object):
             else:
                 raise TypeError('For time being Only Strings are supported')
 
-    def Indexing(self,node,i):  #pseudocode taken from article by sandesh xD
+    def Indexing(self,node,index):  #pseudocode taken from article by sandesh xD
         
-        if node.weight <= i & node.right != None:
-            return self.Indexing(node.right,  i-node.weight)
+        if node.weight <= index & node.right != None:
+            return self.Indexing(node.right,  index-node.weight)
         
         elif node.left != None:
-            return self.Indexing(node.left,i)
+            return self.Indexing(node.left,index)
         
         else:
-            return node.value[i]
+            return node.value[index]
 
 
     def split_node(self, node, s_index):
 
-        data = node.data
-        node1 = Rope(data[:s_index])
-        node2 = Rope(data[s_index:])
+        value = node.value
+        node1 = Rope(value[:s_index])
+        node2 = Rope(value[s_index:])
 
         return node1, node2
 
@@ -59,15 +59,15 @@ class Rope(object):
                 t_node.weight = len(rope1.data)
                 right_node = t_node.right
                 t_node.right = None
-                t_node.parent.weight -= len(right_node.data)
+                t_node.parent.weight -= len(right_node.value)
 
     def split(self, root, index):
 
         node, ind = self.search_node(root, index)
-        node1 = Rope(node.data[:ind])
-        node2 = Rope(node.data[ind:])
-        node.data = ""
-        node.weight = len(node1.data)
+        node1 = Rope(node.value[:ind])
+        node2 = Rope(node.value[ind:])
+        node.value = ""
+        node.weight = len(node1.value)
         node.left = node1
         node.right = node2
         node1.parent, node2.parent = node
@@ -83,3 +83,25 @@ class Rope(object):
         node2.parent = self
         self.current = self
         return self
+
+    def weight(self,node):          #CONFUSION CHECK Pseodocode
+        if node.left == None & node.right == None:
+                return len(node.value)
+        
+        elif node.right == None & node.left != None:
+            return self.weight(node.left)
+
+        elif node.right != None & node.left == None:
+            return self.weight(node.right)
+
+        else:
+            return self.weight(node.right) + self.weight(node.left)
+    
+    def deletion (self, index_i, index_j):
+        first,second = self.splits(self,index_j)
+        re_first, remove = self.splits (self, index_i)
+        final = Rope()
+        final.concatenation(re_first,second)
+        return final
+
+app = Tk()
