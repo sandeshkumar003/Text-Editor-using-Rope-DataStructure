@@ -96,6 +96,14 @@ class Rope(object):
 
         else:
             return self.weight(node.right) + self.weight(node.left)
+     
+    def insertion(self, index_i, s):     # according to Pseodocode
+        s1, s2 = self.split(self, index_i)
+        final = Rope()
+
+        final.concatenation(s1, s)
+        final.concatenation(final, s2)
+        return final
     
     def deletion (self, index_i, index_j):
         first,second = self.splits(self,index_j)
