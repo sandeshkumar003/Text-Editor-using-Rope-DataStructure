@@ -1,8 +1,13 @@
 from tkinter import *
 from tkinter import filedialog 
 from tkinter import font 
+from gtts import gTTS
+import logging
+import os
 
 class TextEditor:
+
+    
 
     def __init__(self,root) :
         self.root = root
@@ -42,34 +47,35 @@ class TextEditor:
         self.filemenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="skyblue",tearoff=0)
         self.menubar.add_cascade(label="File", menu=self.filemenu)
 
-        self.filemenu.add_command(label="New",accelerator="Ctrl+N",command=self.newfile)
-        self.filemenu.add_command(label="Open",accelerator="Ctrl+O",command=self.openfile)
-        self.filemenu.add_command(label="Save",accelerator="Ctrl+S",command=self.savefile)
+        self.filemenu.add_command(label="New",command=self.newfile)
+        self.filemenu.add_command(label="Open",command=self.openfile)
+        self.filemenu.add_command(label="Save",command=self.savefile)
         self.filemenu.add_separator()
-        self.filemenu.add_command(label="Exit",accelerator="Ctrl+E",command=self.exit)
+        self.filemenu.add_command(label="Exit", command=self.exit)
 
 
         #Edit menu:
         self.editmenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="skyblue",tearoff=0)
         self.menubar.add_cascade(label="File", menu=self.editmenu)
 
-        self.editmenu.add_command(label="Cut",accelerator="Ctrl+X",command=self.cut)
-        self.editmenu.add_command(label="Copy",accelerator="Ctrl+C",command=self.copy)
-        self.editmenu.add_command(label="Paste",accelerator="Ctrl+V",command=self.paste)
+        self.editmenu.add_command(label="Cut",command=self.cut)
+        self.editmenu.add_command(label="Copy",command=self.copy)
+        self.editmenu.add_command(label="Paste",command=self.paste)
         self.filemenu.add_separator()
-        # self.editmenu.add_command(label="Undo",accelerator="Ctrl+U",command=self.undo)
+        # self.editmenu.add_command(label="Undo",command=self.undo)
 
         # #self.editmenu.add_command(label="Redo")
         
+##https://www.youtube.com/watch?v=UlQRXJWUNBA
 
+##https://www.codespeedy.com/create-a-text-editor-in-python/ 
 
-    # # Adding New file Command
-    #     
-    # # Adding Open file Command
-    #     
-
-
-
+    def speak(self,msg):
+        logging.info("TextEditor : {}".format(msg))
+        for lines in msg.splitlines():
+            tts = gTTS(text=lines , lang="en-uk", slow=False)
+            tts.save("output.mp3")
+            os.system("start output.mp3") 
 
     def settitle(self):
         if self.filename:
@@ -98,7 +104,7 @@ class TextEditor:
                 self.settitle()
                 self.status.set("Opened Successfully") #status changed!
         except Exception as e:
-                messagebox.showerror("Exception",e)
+                speak(e)
 
     def savefile(self,*args):
 
@@ -113,14 +119,11 @@ class TextEditor:
             # else:
             #     self.saveasfile()
         except Exception as e:
-            messagebox.showerror("Exception",e)
+            speak(e)
 
     def exit(self,*args):
-        op = messagebox.askyesno("WARNING","Your Unsaved Data May be Lost!!")
-        if op>0:
             self.root.destroy()
-        else:
-            return
+        
     
     def cut(self,*args):
         self.txtarea.event_generate("<<Cut>>")
