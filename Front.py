@@ -1,9 +1,7 @@
 from tkinter import *
 from tkinter import filedialog 
 from tkinter import font 
-from gtts import gTTS
-import logging
-import os
+
 
 class TextEditor:
 
@@ -70,12 +68,6 @@ class TextEditor:
 
 ##https://www.codespeedy.com/create-a-text-editor-in-python/ 
 
-    def speak(self,msg):
-        logging.info("TextEditor : {}".format(msg))
-        for lines in msg.splitlines():
-            tts = gTTS(text=lines , lang="en-uk", slow=False)
-            tts.save("output.mp3")
-            os.system("start output.mp3") 
 
     def settitle(self):
         if self.filename:
@@ -94,7 +86,7 @@ class TextEditor:
     def openfile(self,*args):
     # Exception handling
         try:
-            self.filename = filedialog.askopenfilename(title = "Select file",filetypes = (("All Files","*.*"),("Text Files","*.txt"),("Python Files","*.py")))
+            self.filename = filedialog.askopenfilename(title = "Select file",filetypes = (("Word Files",".docx"),("Text Files","*.txt"),("Python Files","*.py")))
             if self.filename != None:
                 infile = open(self.filename,"r") #read mode
                 self.txtarea.delete("1.0",END)  # Clearing text area
@@ -104,7 +96,7 @@ class TextEditor:
                 self.settitle()
                 self.status.set("Opened Successfully") #status changed!
         except Exception as e:
-                speak(e)
+                print("Can't Access")
 
     def savefile(self,*args):
 
@@ -119,7 +111,7 @@ class TextEditor:
             # else:
             #     self.saveasfile()
         except Exception as e:
-            speak(e)
+            print("Can't access")
 
     def exit(self,*args):
             self.root.destroy()
