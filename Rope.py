@@ -133,13 +133,14 @@ class Rope(object):
                 right_node = t_node.right
                 t_node.right = None
                 t_node.parent.weight -= len(right_node.value)
-starting_string="structures"
-characters+=len(starting_string)
+#starting_string="structures"
+characters=0
 def add_first(starting_string):
     document_rope=Rope(starting_string)
-    return document_rope
-document_rope=add_first(starting_string)
-document_rope,characters=document_rope.insertion(" data",characters)
+    characters=len(starting_string)
+    return document_rope,characters
+#document_rope=add_first(starting_string)
+'''document_rope,characters=document_rope.insertion(" data",characters)
 document_rope,characters=document_rope.insertion(" and",characters)
 document_rope,characters=document_rope.insertion(" and",characters)
 document_rope,characters=document_rope.insertion(" algorithms",characters)
@@ -147,7 +148,4 @@ document_rope,characters=document_rope.insertion(" ||",characters)
 document_rope,characters=document_rope.insertion(" 4th",characters)
 document_rope,characters=document_rope.insertion(" semester",characters)
 document_rope,characters=document_rope.insertion(" Habib",characters)
-document_rope,characters=document_rope.insertion(" university",characters)
-
-
-
+document_rope,characters=document_rope.insertion(" university",characters)'''
