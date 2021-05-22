@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import filedialog 
 from tkinter import font
 from tkinter import messagebox
-
+from Rope import *
 
 ######## from docx import Document
 
@@ -78,12 +78,12 @@ class TextEditor:
 
 
     def settitle(self):
-        if self.filename:
-         # Updating Title as filename
-            self.title.set(self.filename)
-        else:
+        # if self.filename:
+        #  # Updating Title as filename
+        #     self.title.set("Text editor")
+        # else:
              # Updating Title 
-            self.title.set("TEXT PAD")
+        self.title.set("TEXT PAD")
     
     def newfile(self,*args):
         self.txtarea.delete("1.0",END)  # Clear Area first
@@ -95,12 +95,16 @@ class TextEditor:
     def openfile(self,*args):
     # Exception handling
         try:
-            self.filename = filedialog.askopenfilename(title = "Select file",filetypes = (("Word Files","*.docx"),("All Files","*.*"),("Text Files","*.txt"),("Python Files","*.py")))
+            self.filename = filedialog.askopenfilename(title = "Select file",filetypes = (("Text Files","*.txt"),("Python Files","*.py")))
             if self.filename != None:
                 infile = open(self.filename,"r") #read mode
                 self.txtarea.delete("1.0",END)  # Clearing text area
+
+
                 for line in infile:   # Inserting data into text area
-                    self.txtarea.insert(END,line)
+                    for character in line:
+                        print(character)
+                        self.txtarea.insert(END,character)
                 infile.close()
                 self.settitle()
                 self.status.set("Opened Successfully") #status changed!
@@ -112,7 +116,7 @@ class TextEditor:
         # Exception handling
         try:
         # Asking for file name and type to save
-            self.filename = filedialog.asksaveasfilename(title = "Save file As",defaultextension=".txt",initialfile = "Untitled.txt",filetypes = (("All Files","*.*"),("Text Files","*.txt"),("Python Files","*.py")))
+            self.filename = filedialog.asksaveasfilename(title = "Save file As",defaultextension=".txt",initialfile = "Untitled.txt",filetypes = (("Text Files","*.txt"),("Python Files","*.py")))
             # Reading the data from text area
             data = self.txtarea.get("1.0",END)
             # opening File in write mode
