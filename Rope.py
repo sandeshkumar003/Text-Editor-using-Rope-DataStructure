@@ -78,7 +78,7 @@ class Rope(object):
         node.right = node2
         return node
     def check_balancing(self,node, char):
-        if node.weight<=(0.52*char) or (node.left==None and node.right==None):
+        if node.weight<=(0.45*char) or (node.left==None and node.right==None):
             return (True,None)
         else:
             char=char-node.weight
@@ -99,14 +99,19 @@ class Rope(object):
             node.right=new_self
             return self,characters
     
-    def deletion (self, index_i, index_j):
-        first,second = self.split(self,index_j)
-        re_first, remove = self.split (self, index_i)
-        final = Rope()
-        final.concatenation(re_first,second)
-        return final
-
-
+    def deletion (self, index_i, index_j, characters):
+        
+        for char in range(index_i, index_j):
+            
+            node, i = self.search_node(char)
+            print(i)
+            if node is not None:
+                print(node.value)
+                characters -= len(node.value)
+                node.value = ""
+                node = None
+                
+        return self, characters
 
     def split_node(self, node, s_index):
         value = node.value
@@ -114,33 +119,40 @@ class Rope(object):
         node2 = Rope(value[s_index:])
         return node1, node2
 
-    def helper_split(self, root_node, index):
+    def edit(self, index, str1, characters):
 
-        t_node, i = self.search_node(index)
+        node, i = self.search_node(index)
 
-        if t_node.parent == None:
+        node1 = Rope(node.value[:i],node)
+        node2 = Rope(str1 + node.value[i:],node)
 
-            return self.split_node(t_node,i)
+        node.value = ""
+        node.weight = len(node1.value)
+        node.left = node1
+        node.right = node2
 
-        else:
+        characters += len(str1)
+        return self, characters
 
-            if i != 0:
+    def print_rope(self, characters):
 
-                rope1, rope2 = self.split_node(t_node,i)
-                t_node.left = rope1
-                t_node.right = rope2
-                t_node.weight = len(rope1.data)
-                right_node = t_node.right
-                t_node.right = None
-                t_node.parent.weight -= len(right_node.value)
-#starting_string="structures"
-characters=0
+        result = ""
+        for i in range(characters):
+            node, ind = self.search_node(i)
+            result += node.value[ind]
+        return result
+
 def add_first(starting_string):
     document_rope=Rope(starting_string)
     characters=len(starting_string)
     return document_rope,characters
-#document_rope=add_first(starting_string)
-'''document_rope,characters=document_rope.insertion(" data",characters)
+
+'''
+starting_string="structures"
+characters+=len(starting_string)
+
+document_rope=add_first(starting_string)
+document_rope,characters=document_rope.insertion(" data",characters)
 document_rope,characters=document_rope.insertion(" and",characters)
 document_rope,characters=document_rope.insertion(" and",characters)
 document_rope,characters=document_rope.insertion(" algorithms",characters)
@@ -148,4 +160,8 @@ document_rope,characters=document_rope.insertion(" ||",characters)
 document_rope,characters=document_rope.insertion(" 4th",characters)
 document_rope,characters=document_rope.insertion(" semester",characters)
 document_rope,characters=document_rope.insertion(" Habib",characters)
-document_rope,characters=document_rope.insertion(" university",characters)'''
+document_rope,characters=document_rope.insertion(" university",characters)
+#document_rope, characters = document_rope.edit(13, "_information", characters)
+#document_rope, characters = document_rope.deletion(0, 18, characters)
+document_rope.print_rope(characters)
+'''

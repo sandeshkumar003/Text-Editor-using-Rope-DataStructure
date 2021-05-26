@@ -93,6 +93,7 @@ class TextEditor:
         self.savecount = 0
 
     def openfile(self,*args):
+        words=0
     # Exception handling
         try:
             self.filename = filedialog.askopenfilename(title = "Select file",filetypes = (("Text Files","*.txt"),("Python Files","*.py")))
@@ -103,27 +104,24 @@ class TextEditor:
                 counter = 0
                 
                 while True:
-                            if counter > 11:
-                                if counter % 6 == 0 :
-                                    character = infile.read(6)
-                                    if not character:
-                                        break
-                                    rope, characters = Rope.insertion(character, characters)
-                                    self.txtarea.insert(END,character)
-                                    print(character)
-                            else :
-                                character = infile.read(11)
-                                if not character:
-                                    break
-                                rope,characters = add_first(character)
+                    if counter > 11 and counter % 6 == 0:
+                        character = infile.read(6)
+                        if not character:
+                            break
+                        rope, characters = rope.insertion(character, characters)
+                        words+=character.count(" ")
+                        self.txtarea.insert(END,character)
                             
-                                self.txtarea.insert(END,character)
-                                print(character)
-                                return rope
- 
-                            counter +=1
-                            
-                            
+                    else :
+                        character = infile.read(11)
+                        if not character:
+                            break
+                        rope,characters = add_first(character)
+                        words+=character.count(" ")
+                        self.txtarea.insert(END,character)
+
+                    counter +=1
+                        
                 infile.close()
                 self.settitle()
                 self.status.set("Opened Successfully") #status changed!
